@@ -16,7 +16,6 @@ class AddInColOthersFacultyTable extends Migration
         Schema::table('faculty', function(Blueprint $table) {
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
-            $table->string('image_original')->nullable();
             $table->date('dob')->nullable();
             $table->integer('gender')->nullable();
             $table->string('addressline1')->nullable();

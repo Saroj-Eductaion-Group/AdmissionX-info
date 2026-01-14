@@ -2932,6 +2932,24 @@
   display: block;
 }
 
+/* Ensure testimonials carousel items are visible */
+.testimonials-v6-item {
+  min-height: 200px;
+  padding: 20px;
+  background: #fff;
+  display: block !important;
+  visibility: visible !important;
+}
+
+.testimonials-v6 .owl-item {
+  display: block !important;
+  visibility: visible !important;
+}
+
+.owl-carousel.owl-loaded {
+  display: block;
+}
+
 @media (max-width: 768px) {
   .testimonials-v6 .testimonials-wrap {
     padding-left: 0;

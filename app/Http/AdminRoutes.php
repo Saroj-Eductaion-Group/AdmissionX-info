@@ -39,7 +39,7 @@ $router->group(['middleware' => 'auth'], function($router)
 	$router->resource('administrator/transaction', 'administrator\TransactionController');
 	$router->resource('administrator/collegemaster', 'administrator\CollegeMasterController');
 	$router->resource('administrator/subscribe', 'administrator\SubscribeController');
-	$router->resource('administrator/albums', 'administrator\AlbumsController');
+	// $router->resource('administrator/albums', 'administrator\AlbumsController'); // Controller missing
 	$router->resource('administrator/placement', 'administrator\PlacementController');
 	$router->resource('administrator/pages', 'administrator\PagesController');
 	$router->resource('administrator/entranceexam', 'administrator\EntranceexamController');

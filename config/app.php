@@ -161,7 +161,7 @@ return [
         Barryvdh\DomPDF\ServiceProvider::class,
         'Orangehill\Iseed\IseedServiceProvider',
         Jenssegers\Agent\AgentServiceProvider::class,
-        Overtrue\LaravelSocialite\ServiceProvider::class,
+        //Overtrue\LaravelSocialite\ServiceProvider::class,  // Package not installed - commented out temporarily
 
         /*
          * Application Service Providers...
@@ -225,7 +225,7 @@ return [
         'Excel'     => 'Maatwebsite\Excel\Facades\Excel',
         //'PDF' => 'Thujohn\Pdf\PdfFacade',
         'PDF'       => Barryvdh\DomPDF\Facade::class,
-        'Socialite' => Overtrue\LaravelSocialite\Socialite::class,
+        //'Socialite' => Overtrue\LaravelSocialite\Socialite::class,  // Package not installed - commented out temporarily
     ],
 
 ];

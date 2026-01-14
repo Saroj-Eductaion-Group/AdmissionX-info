@@ -248,10 +248,10 @@
         </div>
         <ul>
             @foreach($topCousesList as $key => $item)
-                <li><a href="{{ URL::to('/'.$item->functionalareapageslug.'/'.$item->degreepageslug.'/'.$item->pageslug.'/colleges') }}">{{$item->name}}</a></li>
+                <li><span style="color: #333;">{{$item->name}}</span></li>
             @endforeach
             @foreach($topDegreeList as $key => $item)
-                <li><a href="{{ URL::to('/'.$item->functionalareapageslug.'/'.$item->pageslug.'/colleges') }}">{{$item->name}}</a></li>
+                <li><a href="{{ URL::to('/'.$item->functionalareapageslug.'/'.$item->pageslug.'/colleges') }}" style="color: #333; text-decoration: none;">{{$item->name}}</a></li>
             @endforeach
         </ul>
     </div>
@@ -287,22 +287,20 @@
 </div>
 <!-- End Study Abroad -->
 
+<!-- Top Stream Start -->
 <div class="top-courses sp bgg section ">
     <div class="container">
         <div class="section-title white">
             <h2 class="text-dark">Top Stream</h2>
         </div>
         <ul>
-            @foreach($functionalareaList as $key => $item)
-                <li><a href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">{{$item->name}}</a></li>
-            @endforeach
-            @foreach($educationlevelCount as $key => $item)
-                <li><a href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">After - {{$item->name}}</a></li>
+            @foreach($topStreamList as $key => $item)
+                <li><a href="{{ URL::to('/'.$item->pageslug.'/colleges') }}" style="color: #333; text-decoration: none;">{{$item->name}}</a></li>
             @endforeach
         </ul>
     </div>
 </div>
-
+<!-- End Top Stream -->
 
 <!-- Latest Updates Start -->
 <div class="testimonial-area sp section bg-white">
@@ -331,21 +329,24 @@
     </div>
 </div>
 <!-- End Latest Updates -->
+
+<!-- Top Exams Start -->
 <div class="top-courses sp bgg section ">
     <div class="container">
         <div class="section-title white">
-            <h2 class="text-dark">Top Exams </h2>
+            <h2 class="text-dark">Top Exams</h2>
         </div>
         <ul>
             @foreach($listOfExaminationList as $key => $item)
-                <li class="tooltips" data-toggle="tooltip" data-placement="top" title="{{ $item->name }} - {{ $item->exam_sections_name }}"><a href="{{ URL::to('/examination-details/'.$item->exam_sections_slug.'/'.$item->slug) }}" title="{{ $item->name }} - {{ $item->exam_sections_name }}">{{ $item->sortname }}</a></li>
+                <li class="tooltips" data-toggle="tooltip" data-placement="top" title="{{ $item->name }} - {{ $item->exam_sections_name }}"><a href="{{ URL::to('/examination-details/'.$item->exam_sections_slug.'/'.$item->slug) }}" title="{{ $item->name }} - {{ $item->exam_sections_name }}" style="color: #333; text-decoration: none;">{{ $item->sortname }}</a></li>
             @endforeach
             @foreach($listOfExaminationSection as $key => $item)
-                <li><a href="{{ URL::to('/examination-list/'.$item->slug) }}">{{$item->name}} - Exams</a></li>
+                <li><a href="{{ URL::to('/examination-list/'.$item->slug) }}" style="color: #333; text-decoration: none;">{{$item->name}} - Exams</a></li>
             @endforeach
         </ul>
     </div>
 </div>
+<!-- End Top Exams -->
 
 {!! Html::script('new-assets/js/jquery-2.2.4.min.js') !!}
 {!! Html::script('new-assets/js/owl.carousel.min.js') !!}

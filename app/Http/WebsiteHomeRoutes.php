@@ -319,3 +319,18 @@ Route::get('/sitemap/country-wise-state.xml','website\SitemapController@countryW
 // RENDER state wise cities SITEMAP XML
 Route::get('/sitemap/state-wise-cities/{slug}','website\SitemapController@stateWiseCityListXmlAction');
 /****************************** Sitemap Routes End****************************/
+
+// Navigation routes for main menu
+Route::get('/engineering/colleges', 'website\HomeController@engineeringColleges');
+Route::get('/medical/colleges', 'website\HomeController@medicalColleges');
+Route::get('/management/colleges', 'website\HomeController@managementColleges');
+Route::get('/study-abroad', 'website\HomeController@studyAbroad');
+Route::get('/top-colleges', 'website\HomeController@topColleges');
+Route::get('/top-university', 'website\HomeController@topUniversity');
+Route::get('/reviews', 'website\HomeController@reviews');
+Route::get('/news', 'website\HomeController@news');
+Route::get('/ask', 'website\HomeController@askQuestion');
+
+// Generic page route for CMS pages
+Route::get('/page/{slug}', 'website\HomeController@pageDetailAction');
+Route::get('/{slug}', 'website\HomeController@pageDetailAction');

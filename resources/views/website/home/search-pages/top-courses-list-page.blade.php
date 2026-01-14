@@ -61,82 +61,31 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="exploreCategoryTop text-center padding-bottom15">
-                    <h2>explore stream list</h2>
-                    <p class="padding-top5">BROWSE ({{ sizeof($functionalareaList) }}) Stream</p>  
+                    <h2>Top Courses</h2>
+                    <p class="padding-top5">BROWSE ({{ sizeof($topCoursesList) }}) Courses</p>  
                 </div>
             </div>
         </div>
         <div class="row margin-top30 margin-bottom30">
             <div class="notificationTop margin-bottom20">
-                <h2> List of All Edication Level</h2>
-            </div>
-            @foreach( $getEducationLevelObj as $item )
-            <div class="col-md-4 margin-top20 margin-bottom20">
-                <div class="notificationBot clientContactDetails clientContactDetail1">
-                    <div class="row">
-                        <div class="col-md-1 margin-left15" style="cursor: pointer;">
-                            <div class="detailCoursebotIcon">
-                                <a target="_blank" href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">
-                                    <i class="fa fa-book"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="detailCoursebotContent">
-                                <a target="_blank" href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">
-                                    <h2 style="font-size: 15px !important;">{{ $item->name }}</h2>
-                                </a>        
-                            </div>
-                        </div>
-                    </div>
-                    <div class="detailApplyNow text-center">
-                        <a class="" style="display: inline-block; padding-left: 10px; padding-right: 10px;" target="_blank" href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">Explore Colleges</a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>  
-        <div class="row margin-top30 margin-bottom30">
-            <div class="notificationTop margin-bottom20">
-                <h2> List of All Stream ({{ sizeof($functionalareaList) }})</h2>
+                <h2>List of All Top Courses ({{ sizeof($topCoursesList) }})</h2>
             </div>
             <main class="cards">
-            @foreach( $functionalareaList as $item )
+            @foreach( $topCoursesList as $item )
             <div class="col-md-4 margin-top20 margin-bottom20" style="display:flex;">
                 <article class="card" style="min-height:80px; background:#fff; box-shadow:#e2e2e2 0 0 23px; padding: 20px;">
                     <div class="notificationBot clientContactDetails">
                         <div class="row">
                             <div class="col-md-1 margin-left15" style="cursor: pointer;">
                                 <div class="detailCoursebotIcon">
-                                    <a target="_blank" href="{{ URL::to('/stream/'.$item->pageslug.'/degree') }}">
-                                        <i class="fa fa-book"></i>
-                                    </a>
+                                    <i class="fa fa-book"></i>
                                 </div>
                             </div>
                             <div class="col-md-9">
                                 <div class="detailCoursebotContent">
-                                    <a target="_blank" href="{{ URL::to('/stream/'.$item->pageslug.'/degree') }}">
-                                        <h2 style="font-size: 15px !important;">{{ $item->name }}</h2>
-                                    </a>        
+                                    <h2 style="font-size: 15px !important;">{{ $item->name }}</h2>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="">
-                            {{--*/ $hasComma = false; /*--}}
-                            @foreach($item->streamDegreeList as $key2 => $item2)
-                                @if ($hasComma) | @endif
-                                <a class="" href="{{ URL::to('/stream/'.$item2->functionalareapageslug.'/'.$item2->pageslug.'/courses') }}"> {{ $item2->name }} @if($item2->totalCourseCount > 1 )({{$item2->totalCourseCount}} Courses)@endif</a> 
-                                {{--*/ $hasComma = true; /*--}}
-                                @if($key2 == 7)
-                                    {{--*/ break; /*--}}
-                                @endif      
-                            @endforeach
-                        </div>
-
-                        <div class="detailApplyNow text-center">
-                            <a class="" style="display: inline-block; padding-left: 10px; padding-right: 10px;" target="_blank" href="{{ URL::to('/stream/'.$item->pageslug.'/degree') }}">View More @if(sizeof($item->streamDegreeList) > 0)({{ sizeof($item->streamDegreeList) }})@endif</a>
-                            <a class="" style="display: inline-block; padding-left: 10px; padding-right: 10px;" target="_blank" href="{{ URL::to('/'.$item->pageslug.'/colleges') }}">Explore Colleges</a>
                         </div>
                     </div>
                 </article>

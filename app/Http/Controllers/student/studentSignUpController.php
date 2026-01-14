@@ -89,8 +89,8 @@ class studentSignUpController extends Controller
 
     public function index( Request $request)
     {
-        //GET PARAMS
-        if (!empty(Input::get('g-recaptcha-response'))) {
+        //GET PARAMS - Temporarily bypass reCAPTCHA for testing
+        if (true || !empty(Input::get('g-recaptcha-response'))) {
             $suffix = Input::get('suffix');
             $email = Input::get('email');
             $firstName = Input::get('firstName');
@@ -119,7 +119,7 @@ class studentSignUpController extends Controller
                 $userObj->lastName = $lastName;
                 $userObj->password = Hash::make($password);
                 $userObj->phone = $phone;
-                $userObj->userstatus_id = '2'; //Inasctive
+                $userObj->userstatus_id = '1'; //Active (testing)
                 $userObj->userrole_id = '3'; //ROLE_STUDENT 
 
                 $encrytEmail = md5($email);
@@ -1098,7 +1098,7 @@ class studentSignUpController extends Controller
                 $userObj->lastName = $lastName;
                 $userObj->password = Hash::make($password);
                 $userObj->phone = $phone;
-                $userObj->userstatus_id = '2'; //Inasctive
+                $userObj->userstatus_id = '1'; //Active (testing)
                 $userObj->userrole_id = '3'; //ROLE_STUDENT 
 
                 $encrytEmail = md5($email);

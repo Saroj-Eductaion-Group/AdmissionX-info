@@ -40,7 +40,7 @@ $router->group(['middleware' => 'auth'], function($router)
 	$router->resource('employee/transaction', 'employee\TransactionController');
 	$router->resource('employee/collegemaster', 'employee\CollegeMasterController');
 	$router->resource('employee/subscribe', 'employee\SubscribeController');
-	$router->resource('employee/albums', 'employee\AlbumsController');
+	// $router->resource('employee/albums', 'employee\AlbumsController'); // Controller missing
 	$router->resource('employee/placement', 'employee\PlacementController');
 	$router->resource('employee/pages', 'employee\PagesController');
 	$router->resource('employee/entranceexam', 'employee\EntranceexamController');

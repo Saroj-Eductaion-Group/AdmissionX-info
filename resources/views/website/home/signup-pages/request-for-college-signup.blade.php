@@ -154,6 +154,7 @@
 		            </div>
 		        @endif
 				<form action="/college-login" method="POST" data-parsley-validate="" enctype="multipart/form-data">
+                    {{ csrf_field() }}
 					<input type="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" id="email" class="form-control college-input-fd" name="email" placeholder="Email Address" required="required" data-parsley-trigger="change" data-parsley-error-message="Please enter valid email address" required="" data-parsley-id="6">
 					<input type="password" class="form-control college-input-fd" id="password" placeholder="Password" name="password" data-parsley-trigger="change" data-parsley-error-message="Please enter valid password" required="" data-parsley-id="6">
 					<button type="submit" class="btn-u btn-block rounded margin-top30 margin-bottom30">Sign In</button>
@@ -180,21 +181,26 @@
 		            </div>
 		        @endif
 				<form action="/request/create/college-account" method="POST" data-parsley-validate="" enctype="multipart/form-data">
+                    {{ csrf_field() }}
 					<input type="text" required="" class="form-control college-input-fd" name="collegeName" placeholder="College Name" data-parsley-pattern="^[a-zA-Z\s .()-]*$" data-parsley-error-message="Please enter your valid college name" data-parsley-trigger="change">
 
 					<input type="email" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$" class="form-control college-input-fd validateEmailAddress" name="email" placeholder="Email Address" data-parsley-type="email"  data-parsley-error-message="Please enter valid email address" data-parsley-trigger="change" required="" >
 					<p class="text-danger validateEmailAddressMsg hide">This email address is already exist with another user, try again with another email address.</p> 
 
-					<input type="text" class="form-control college-input-fd" name="contactNumber" placeholder="Contact Number" data-parsley-error-message="Please enter valid mobile number" data-parsley-type="digits" data-parsley-trigger="change" required="" data-parsley-maxlength="10" data-parsley-minlength="10" maxlength="10" data-parsley-pattern="^[6-9][0-9]{9}$" data-parsley-length="[10, 10]" > <!-- data-parsley-maxlength="10" data-parsley-minlength="10" maxlength="10" data-parsley-pattern="^[7-9][0-9]{9}$" data-parsley-length="[10, 10]" -->
+					<input type="text" class="form-control college-input-fd" name="contactNumber" placeholder="Contact Number" data-parsley-error-message="Please enter valid mobile number" data-parsley-type="digits" data-parsley-trigger="change" required="" data-parsley-maxlength="10" data-parsley-minlength="10" maxlength="10" data-parsley-pattern="^[6-9][0-9]{9}$" data-parsley-length="[10, 10]" >
 
 					<input  type="text" required="" class="form-control college-input-fd" name="contactPersonName" placeholder="Contact person name" data-parsley-pattern="^[a-zA-Z\s .()-]*$" data-parsley-error-message="Please enter your valid contact person name" data-parsley-trigger="change">
 
-					<div class="margin-bottom10 margin-top40">
+					<input type="password" class="form-control college-input-fd" id="password" name="password" placeholder="Password" required data-parsley-minlength="6" data-parsley-error-message="Please enter password (min 6 chars)" data-parsley-trigger="change">
+
+<input type="password" class="form-control college-input-fd" name="password_confirmation" placeholder="Confirm Password" required data-parsley-error-message="Passwords do not match" data-parsley-trigger="change">
+
+					<!-- <div class="margin-bottom10 margin-top40">
 						<div class="g-recaptcha" data-sitekey="{{ env('RE_CAP_SITE') }}" required=""></div>
 						{!! $errors->first('g-recaptcha-response', '<p class="alert alert-danger">:message</p>') !!}
-					</div>
+					</div> -->
 
-					<button style="width:90%;" type="submit" class="btn-u btn-block rounded margin-top10">Submit</button>
+					<button style="width:90%;" type="submit" class="btn-u btn-block rounded margin-top30">Submit</button>
 				</form>
 				<div class="studentsignUp">
 					<p class="margin-top20">Student Sign Up? <a href="{{ URL::to('/student-sign-up') }}" target="_blank">click here</a></p>
@@ -205,17 +211,54 @@
 	</div>
 </div>
 
-
-@endsection
-
 @section('scripts')
 <script type="text/javascript">
-    window.onload = function() {
-	    var $recaptcha = document.querySelector('#g-recaptcha-response');
+$(function(){
+    var $form = $('form[data-parsley-validate]');
+    var $pwd = $form.find('input[name="password"]');
+    var $confirm = $form.find('input[name="password_confirmation"]');
 
-	    if($recaptcha) {
-	        $recaptcha.setAttribute("required", "required");
-	    }
-  	};
+    if ($pwd.length && $confirm.length) {
+        var confirmParsley = null;
+
+        function getConfirmParsley(){
+            if (confirmParsley) return confirmParsley;
+            try { confirmParsley = $confirm.parsley(); } catch(e) { confirmParsley = null; }
+            return confirmParsley;
+        }
+
+        function updateConfirmValidation() {
+            var pVal = ($pwd.val() || '').trim();
+            var cVal = ($confirm.val() || '').trim();
+
+            // If confirmation is empty, clear any errors
+            if (cVal.length === 0) {
+                try { var cp = getConfirmParsley(); if (cp) cp.reset(); } catch(e) {}
+                return;
+            }
+
+            // Only validate after minimal length reached
+            if (pVal.length < 6) {
+                try { var cp = getConfirmParsley(); if (cp) cp.removeError('mismatch'); } catch(e) {}
+                return;
+            }
+
+            // Show or hide mismatch error based on exact equality
+            if (pVal === cVal) {
+                try { var cp = getConfirmParsley(); if (cp) cp.removeError('mismatch'); } catch(e) {}
+            } else {
+                try { var cp = getConfirmParsley(); if (cp) cp.addError('mismatch', {message: 'Passwords do not match'}, 'constraint'); } catch(e) {}
+            }
+        }
+
+
+        $pwd.on('input', updateConfirmValidation);
+        $confirm.on('input', updateConfirmValidation);
+
+        // Run one validation when page loads if values are prefilled
+        updateConfirmValidation();
+    }
+});
 </script>
 @endsection
+

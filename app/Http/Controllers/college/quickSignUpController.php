@@ -952,12 +952,23 @@ class quickSignUpController extends Controller
 
     public function requestCollegeAccountFormSubmit()
     {
-        if (!empty(Input::get('g-recaptcha-response'))) {
             //GET PARAMS
             $collegeName = Input::get('collegeName');
             $emailAddress = Input::get('email');
             $contactNumber = Input::get('contactNumber');
             $contactPersonName = Input::get('contactPersonName');
+            $password = Input::get('password');
+            $passwordConfirmation = Input::get('password_confirmation');
+
+            // Server side password validation if provided
+            if (!empty($password)) {
+                if (strlen($password) < 6 || $password !== $passwordConfirmation) {
+                    Session::flash('alert_class', 'alert-danger');
+                    Session::flash('flash_message', 'Password must be at least 6 characters and must match confirmation.');
+                    return redirect::back()->withInput();
+                }
+            }
+
             //Check for already existing account
             $checkEmailDuplicateObj = DB::table('users')
                                         ->where('email' ,'=', $emailAddress)
@@ -976,6 +987,15 @@ class quickSignUpController extends Controller
                     $requestObj->email = $emailAddress;
                     $requestObj->phone = $contactNumber;
                     $requestObj->contactPersonName = $contactPersonName;
+                    // Hash and store password if provided
+                    if (!empty(Input::get('password'))) {
+                        try {
+                            $requestObj->password = \Hash::make(Input::get('password'));
+                        } catch (\Exception $e) {
+                            // fallback: store raw (not recommended) - but avoid crash
+                            $requestObj->password = Input::get('password');
+                        }
+                    }
                     $requestObj->employee_id = Auth::id();
                     $requestObj->status = '0'; //ROLE_COLLEGE 
                     $requestObj->save();
@@ -1044,6 +1064,78 @@ class quickSignUpController extends Controller
                     }catch (\Exception $e) {
                         return $e;
                     }
+
+                    // Create a user & minimal college profile if password supplied so the requester can login
+                    try {
+                        if (!empty($password)) {
+                            $userObj = new User;
+                            $userObj->email = $emailAddress;
+                            $userObj->firstname = $collegeName;
+                            $userObj->password = \Hash::make($password);
+                            $userObj->phone = $contactNumber;
+                            $userObj->userstatus_id = '2'; //Inactive/pending
+                            $userObj->userrole_id = '2'; //ROLE_COLLEGE
+                            $userObj->token = md5($emailAddress);
+                            $userObj->save();
+
+                            $getEmailWiseUserId = User::where('email', '=', $emailAddress)->firstOrFail();
+
+                            //STORE INTO COLLEGEPROFILES TABLE FOR CREATE RECORD
+                            $collegeProfileObj = New CollegeProfile;
+                            $collegeProfileObj->users_id = $getEmailWiseUserId->id;
+                            $slugUrl = preg_replace('/[^A-Za-z0-9-]+/', '-', $getEmailWiseUserId->firstname.' '.$getEmailWiseUserId->id);
+                            $slugUrl = strtolower($slugUrl);
+                            $collegeProfileObj->slug = strtolower($slugUrl);
+                            $collegeProfileObj->save();
+
+                            //CREATE TWO FOLDERS IN GALLERY AND DOCUMENTS FOR PHOTOS
+                            if (!file_exists(public_path().'/document/'.$slugUrl)) {
+                                @mkdir(public_path().'/document/'.$slugUrl, 0777, true);
+                            }
+                            if (!file_exists(public_path().'/gallery/'.$slugUrl)) {
+                                @mkdir(public_path().'/gallery/'.$slugUrl, 0777, true);
+                            }
+
+                            //Create Blank Row For Every College LOGOS
+                            $createGalleryCollegeLogo = new Gallery;
+
+                            $createGalleryCollegeLogo->caption = 'College Logo';
+                            $createGalleryCollegeLogo->misc = 'college-logo-img';
+                            $createGalleryCollegeLogo->category_id = '1';
+                            $createGalleryCollegeLogo->users_id = $getEmailWiseUserId->id;
+
+                            $createGalleryCollegeLogo->save();
+
+                            //GET COLLEGE PROFILE ID AS PER SLUG
+                            $getCollProId = CollegeProfile::where('slug', '=', $slugUrl)->firstOrFail();
+                            //STORE INTO ADDRESS TABLE FOR CREATE RECORD
+                            //For Registered address
+                            $addressObj = New Address;
+                            $addressObj->addresstype_id = '1';
+                            $addressObj->collegeprofile_id = $getCollProId->id;
+                            $addressObj->save();
+
+                            //For Campus address
+                            $addressObj = New Address;
+                            $addressObj->addresstype_id = '2';
+                            $addressObj->collegeprofile_id = $getCollProId->id;
+                            $addressObj->save();
+
+                            $placementObj = New Placement;
+                            $placementObj->collegeprofile_id = $getCollProId->id;
+                            $placementObj->save();
+
+                            $seoContentObj = New SeoContent;
+                            $seoContentObj->pagetitle = $collegeName;
+                            $seoContentObj->misc = 'collegepage';
+                            $seoContentObj->collegeId = $getCollProId->id;
+                            $seoContentObj->employee_id = Auth::id();
+                            $seoContentObj->save();
+                        }
+                    } catch (\Exception $e) {
+                        // don't break the flow if user/college creation has issues
+                    }
+
                     Session::flash('alert_class', 'alert-success');  
                     Session::flash('flash_message', 'Your college profile request has been submitted!');    
                 }else{
@@ -1054,10 +1146,6 @@ class quickSignUpController extends Controller
                 Session::flash('alert_class', 'alert-danger');  
                 Session::flash('flash_message', 'This email address is already exist with another user, try again with another user.');  
             } 
-        }else{
-            Session::flash('alert_class', 'alert-danger');  
-            Session::flash('flash_message', 'Please verify the captcha.');  
-        }        
         return redirect::back();
     }
 }

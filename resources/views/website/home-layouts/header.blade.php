@@ -50,78 +50,41 @@
 					<div class="collapse navbar-collapse navbar-responsive-collapse" >
 						<div class="res-container">
 							<ul class="nav navbar-nav">
-								@if(Auth::check())
-									{{--*/   $getLoggedObj = DB::table('users')
-											->where('users.id', '=', Auth::id())
-	                                        ->where('users.userrole_id','!=','2')
-	                                        ->where('users.userrole_id','!=','3')
-	                                        ->select('users.id')
-	                                        ->take(1)
-	                                        ->get()
-	                                        ;
-				                	/*--}}
-				                	@if( $getLoggedObj )
-				                	<li><a href="{{ URL::to('counselling') }}">Counselling</a></li>
-									<li><a href="{{ URL::to('education-blogs') }}">Blogs</a></li>
-									<li><a href="{{ URL::to('login') }}">Dashboard</a></li>
-									<li><a href="{{ URL::to('logout') }}">Logout</a></li>
-									@endif
-								@else
-								<li><a href="{{ URL::to('educational-institution') }}">College</a></li>
+								<li><a href="{{ URL::to('/') }}">Home</a></li>
+								<li><a href="{{ URL::to('engineering/colleges') }}">Engineering</a></li>
+								<li><a href="{{ URL::to('medical/colleges') }}">Medical</a></li>
+								<li><a href="{{ URL::to('management/colleges') }}">Management</a></li>
+								<li><a href="{{ URL::to('examination') }}">Examination</a></li>
+								<li><a href="{{ URL::to('study-abroad') }}">Study Abroad</a></li>
 								<li><a href="{{ URL::to('counselling') }}">Counselling</a></li>
-								<li><a href="{{ URL::to('education-blogs') }}">Blogs</a></li>
-								@endif
-
-								@if(Auth::check())
-
-				                	{{--*/   $getCollegeProfileObj = DB::table('users')
-												->leftjoin('userrole', 'users.userrole_id', '=', 'userrole.id')
-		                                        ->leftJoin('collegeprofile', 'users.id', '=', 'collegeprofile.users_id')
-		                                        ->where('users.id', '=', Auth::id())
-		                                        ->where('users.userrole_id','=','2')
-		                                        ->select('collegeprofile.slug')
-		                                        ->take(1)
-		                                        ->get()
-		                                        ;
-				                	/*--}}
-				                	@if( $getCollegeProfileObj )
-				                		<li class="dropdown">
-											<a href="{{ URL::to('college/check-applications', $getCollegeProfileObj[0]->slug) }}" class="dropdown-toggle" data-toggle="dropdown"> Applications  </a>
-											<ul class="dropdown-menu" style="top: auto;">
-												<li><a href="{{ URL::to('college/check-application-status/accepted') }}">Accepted</a></li>
-												<li><a href="{{ URL::to('college/check-application-status/pending') }}">Pending</a></li>
-												<li><a href="{{ URL::to('college/check-application-status/rejected') }}">Rejected</a></li>
-												<li><a href="{{ URL::to('college/check-application-status/cancelled') }}">Cancelled</a></li>
-												<li><a href="{{ URL::to('college/check-application-status/view') }}">View All</a></li>
-											</ul>
-										</li>
-										<li class="dropdown">
-											<a href="{{ URL::to('college/check-queries', $getCollegeProfileObj[0]->slug) }}" class="dropdown-toggle" data-toggle="dropdown">
-												Queries
-											</a>
-											<ul class="dropdown-menu" style="top: auto;">
-												<li><a href="{{ URL::to('college/check-queries-status/replied') }}">Replied</a></li>
-												<li><a href="{{ URL::to('college/check-queries-status/pending') }}">Pending</a></li>
-												<li><a href="{{ URL::to('college/check-queries-status/view') }}">View All</a></li>
-											</ul>
-										</li>
+								<li class="dropdown">
+									<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+										More <span class="caret"></span>
+									</a>
+									<ul class="dropdown-menu" style="top: auto;">
+										<li><a href="{{ URL::to('top-colleges') }}">Top Colleges</a></li>
+										<li><a href="{{ URL::to('top-university') }}">Top Universities</a></li>
+										<li><a href="{{ URL::to('reviews') }}">Reviews</a></li>
+										<li><a href="{{ URL::to('news') }}">News</a></li>
 										<li><a href="{{ URL::to('education-blogs') }}">Blogs</a></li>
-										<li><a href="{{ URL::to('login') }}">Dashboard</a></li>
-										@if(Auth::check())
-						                    <li class="dropdown"><a href="">
-						                        <span class="m-r-sm text-muted welcome-message">Hi, {{ str_limit(Auth::user()->firstname, $limit = 17, $end = '') }}
-						                        </span></a>
-						                        <ul class="dropdown-menu" style="top: auto;">
-						                        	<li><a href="{{ URL::to('logout') }}">Logout</a></li>
-						                        </ul>
-						                    </li>
-						                @endif
-									@endif
+										<li><a href="{{ URL::to('ask') }}">Ask</a></li>
+									</ul>
+								</li>
+								@if(!Auth::check())
+									<li><a class="color-green" data-toggle="modal" data-target="#loginModal" href="">Log In</a></li>
+									<li><a class="color-green" data-toggle="modal" data-target="#signUpModel" href="">Sign Up</a></li>
 								@else
-									<li><a class="color-green" data-toggle="modal" data-target="#loginModal" data-whatever="" href="">Log In</a></li>
-									<li><a class="color-green" data-toggle="modal" data-target="#signUpModel" data-whatever="" href="">Sign Up</a></li>
+									<li><a href="{{ URL::to('login') }}">Dashboard</a></li>
+									<li class="dropdown">
+										<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+											<span class="m-r-sm text-muted welcome-message">Hi, {{ str_limit(Auth::user()->firstname, $limit = 17, $end = '') }}</span>
+											<span class="caret"></span>
+										</a>
+										<ul class="dropdown-menu" style="top: auto;">
+											<li><a href="{{ URL::to('logout') }}">Logout</a></li>
+										</ul>
+									</li>
 								@endif
-								<li><a class="collegeTabBorder" href="{{ URL::to('engineering-association-examination') }}">AIEA Exam</a></li>
 							</ul>
 						</div>
 					</div>

@@ -758,15 +758,16 @@ class HomeController extends Controller
         });
 
         $topCousesList = Cache::remember('topCousesList', Config::get('systemsetting.CACHE_LIFE_LIMIT'), function () { 
-            return  DB::table('course')
-                        ->leftJoin('degree', 'course.degree_id', '=', 'degree.id')
-                        ->leftJoin('functionalarea', 'functionalarea.id', '=', 'degree.functionalarea_id')
-                        ->where('course.isShowOnHome','=', 1)
-                        ->where('course.degree_id','!=', "")
-                        ->where('degree.functionalarea_id','!=', "")
-                        ->select('course.id', 'course.name','course.pageslug', 'degree.name as degreeName','degree.pageslug as degreepageslug','functionalarea.name as functionalareaName','functionalarea.pageslug as functionalareapageslug')
-                        ->orderBy(DB::raw('RAND()'))
-                        ->take(20)
+            return  DB::table('topcourse')
+                        ->select('topcourse.id', 'topcourse.name','topcourse.pageslug')
+                        ->orderBy('topcourse.name', 'ASC')
+                        ->get();
+        });
+
+        $topStreamList = Cache::remember('topStreamList', Config::get('systemsetting.CACHE_LIFE_LIMIT'), function () { 
+            return  DB::table('topstream')
+                        ->select('topstream.id', 'topstream.name','topstream.pageslug')
+                        ->orderBy('topstream.name', 'ASC')
                         ->get();
         });
 
@@ -885,7 +886,7 @@ class HomeController extends Controller
                     ->get();
         });
 
-        return view('website/home.new-home-page', compact('whatweoffer', 'totalExamination','topCousesList','educationlevelCount','totalCourses','totalBlogs','totalCollege','sliderManager','getCollegesInfoObj','latestUpdateObj','functionalareaList','topDegreeList','studuAbroadObj','agent','seocontent','getHomeBannerAds','listOfExaminationSection','listOfExaminationList','getListOfAdsManagements'));
+        return view('website/home.new-home-page', compact('whatweoffer', 'totalExamination','topCousesList','educationlevelCount','totalCourses','totalBlogs','totalCollege','sliderManager','getCollegesInfoObj','latestUpdateObj','functionalareaList','topDegreeList','studuAbroadObj','agent','seocontent','getHomeBannerAds','listOfExaminationSection','listOfExaminationList','getListOfAdsManagements','topStreamList'));
     }
 
     public function examinationPage()
@@ -1910,6 +1911,21 @@ class HomeController extends Controller
     {
         if($slug == 2024){
             return view('website.home.educareer.edu-career-mela-2024');
+        }else{
+            return redirect('/');
+        }
+    }
+
+    public function pageDetailAction($slug)
+    {
+        $pageObj = DB::table('pages')
+                    ->where('slug', '=', $slug)
+                    ->where('status', '=', 1)
+                    ->select('id', 'title', 'body', 'slug')
+                    ->first();
+
+        if(!empty($pageObj)){
+            return view('website.home.pages.page-detail', compact('pageObj'));
         }else{
             return redirect('/');
         }

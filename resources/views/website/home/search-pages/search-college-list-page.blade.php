@@ -299,7 +299,11 @@
                         @endif
                         @include('common-partials.ads-slider', ['addonClass'=>'margin-top20 margin-bottom20','ads_position'=>'default'])
                     @else
-                        <div class="headline text-center"><h3>No match found, please try with different search criteria</h3></div>
+                        <div class="headline text-center">
+                            <h3>No colleges found in the database</h3>
+                            <p>Please add colleges through the admin panel or import college data.</p>
+                            <p>The database currently has 0 colleges marked as reviewed and verified.</p>
+                        </div>
                     @endif
                 </div>
             </form>

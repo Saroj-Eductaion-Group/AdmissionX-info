@@ -1668,26 +1668,15 @@ class SearchPageController extends Controller
 
     public function topCoursesListPage(Request $request)
     {
-        $isShowOnTop = "if(functionalarea.isShowOnTop = 1 , 1,2) as isShowOnTop";
-
-        $functionalareaList = DB::table('functionalarea')
-                ->select('functionalarea.id','name','pagetitle','pagedescription','pageslug','logoimage','bannerimage','isShowOnTop','isShowOnHome', DB::Raw($isShowOnTop))
-                ->groupBy('functionalarea.id')
-                ->orderBy('isShowOnTop', 'ASC')
+        $topCoursesList = DB::table('topcourse')
+                ->select('id','name','pageslug')
+                ->orderBy('name', 'ASC')
                 ->get();
-
-
-        foreach ($functionalareaList as $key => $value) {
-            $isShowOnTopDegree = "if(degree.isShowOnTop = 1 , 1,2) as isShowOnTopDegree";
-            $value->streamDegreeList = DB::table('degree')->where('degree.functionalarea_id','=', $value->id)->leftJoin('functionalarea', 'degree.functionalarea_id', '=', 'functionalarea.id')->select('degree.id', 'degree.name','degree.pageslug', 'functionalarea.name as functionalareaName','functionalarea.pageslug as functionalareapageslug', DB::Raw($isShowOnTopDegree), DB::raw('(SELECT COUNT(course.id) FROM course WHERE course.degree_id = degree.id) AS totalCourseCount'))->groupBy('degree.id')->orderBy('isShowOnTopDegree', 'ASC')->get();
-        }
-
-        $getEducationLevelObj = Cache::remember('getEducationLevelObj', Config::get('systemsetting.CACHE_LIFE_LIMIT'), function () { return   DB::table('educationlevel')->get(); });
 
         $seoSlugName = 'top-course-list-page';
         $seocontent = $this->fetchDataServiceController->seoContentDetailsByMisc($seoSlugName);
 
-        return view('website/home.search-pages.top-courses-list-page', compact('functionalareaList','getEducationLevelObj','seocontent'));
+        return view('website/home.search-pages.top-courses-list-page', compact('topCoursesList','seocontent'));
     }
 
     public function streamAndEduLevelCollegeListPage(Request $request, $pageslug)
@@ -5183,29 +5172,22 @@ class SearchPageController extends Controller
             $status = true;
         }
 
-        $databaseCoursesObj = DB::table('course')
-                            ->leftJoin('degree', 'course.degree_id', '=', 'degree.id')
-                            ->leftJoin('functionalarea', 'functionalarea.id', '=', 'degree.functionalarea_id')
-                            ->where('course.degree_id','!=', "")
-                            ->where('degree.functionalarea_id','!=', "")
-                            ->whereRaw('course.name like "%'.$query.'%"')
-                            ->select('course.id', 'course.name','course.pageslug', 'degree.name as degreeName','degree.pageslug as degreepageslug','functionalarea.name as functionalareaName','functionalarea.pageslug as functionalareapageslug')
-                            ->orderBy(DB::raw('RAND()'))
-                            ->groupBy('course.id')
+        $databaseCoursesObj = DB::table('topcourse')
+                            ->whereRaw('topcourse.name like "%'.$query.'%"')
+                            ->select('topcourse.id', 'topcourse.name','topcourse.pageslug')
+                            ->orderBy('topcourse.name', 'ASC')
                             ->take(10)   
-                            ->get()
-                            ;
+                            ->get();
 
         $databaseCourses = array();
         foreach ($databaseCoursesObj as $item) {
-            $courseCollegePageUrl = URL::to('/'.$item->functionalareapageslug.'/'.$item->degreepageslug.'/'.$item->pageslug.'/colleges');
             $databaseCourses[] = array(
                         'id'                    => $item->id,
-                        'name'                  => $item->name.' - ('.$item->degreeName.', '.$item->functionalareaName.')',
+                        'name'                  => $item->name,
                         'coursesSlug'           => $item->pageslug,
-                        'courseCollegePageUrl'  => $courseCollegePageUrl,
-                        'degreeUrl'             => $item->degreepageslug,
-                        'funcationalAreaUrl'    => $item->functionalareapageslug,
+                        'courseCollegePageUrl'  => '#',
+                        'degreeUrl'             => '',
+                        'funcationalAreaUrl'    => '',
                     );
         }
 

@@ -15,6 +15,9 @@ var OwlCarousel = function () {
         navText: [,],
         nav: true,
         dots: false,
+        stagePadding: 0,
+        lazyLoad: false,
+        autoHeight: true
 			});
 
       $('.owl-college-v1').owlCarousel({
@@ -50,6 +53,9 @@ var OwlCarousel = function () {
         navText: ['prev','next'],
         nav: true,
         dots: false,
+        stagePadding: 0,
+        lazyLoad: false,
+        autoHeight: true
       });
 
 			$('.owl-clients-v5').owlCarousel({

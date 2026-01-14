@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Model::unguard();
+        
+        // Disable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         // $this->call(UserTableSeeder::class);
         $this->call('UserStatusTableSeeder');
@@ -44,6 +47,8 @@ class DatabaseSeeder extends Seeder
         $this->call('ExaminationModeTableSeeder');
         $this->call('EligibilityCriteriaTableSeeder');
 		$this->call('ExamSectionsTableSeeder');
+		$this->call('ExamSectionsTableSeederData');
+		$this->call('TypeOfExaminationsTableSeeder');
 		$this->call('CounselingBoardsTableSeeder');
 		$this->call('CounselingBoardDetailsTableSeeder');
         $this->call('ContentcategoryTableSeeder'); 
@@ -53,7 +58,10 @@ class DatabaseSeeder extends Seeder
         $this->call('NewsTagsTableSeeder');
 		$this->call('AskQuestionTagsTableSeeder');
 		$this->call('ContentsTableSeeder');
-        $this->call('TemplatesTableSeeder');
-        $this->call('EntranceexamTableSeeder');
+        // $this->call('TemplatesTableSeeder');
+        // $this->call('EntranceexamTableSeeder');
+        
+        // Re-enable foreign key constraints
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 	}
 }

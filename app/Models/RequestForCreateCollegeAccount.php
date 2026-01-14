@@ -25,7 +25,7 @@ class RequestForCreateCollegeAccount extends Model
      *
      * @var array
      */
-    protected $fillable = ['collegeName', 'email', 'phone', 'contactPersonName', 'employee_id', 'status'];
+    protected $fillable = ['collegeName', 'email', 'phone', 'contactPersonName', 'employee_id', 'status', 'password'];
 
     
 }

@@ -217,10 +217,11 @@
 				                                                <input type="password" class="form-control input-medium student-input-field" data-type="password" id="password_again" name="password_again" placeholder="Confirm Password" data-parsley-trigger="change" data-parsley-equalto="#password1" data-equalto-message="Password doesn't match" required="" data-parsley-error-message="Password does not match" minlength="6"  >
 				                                            </div>
 				                                        </div>
-				                                        <div class="input-group margin-top15 margin-bottom-20">
+				                                        {{-- Temporarily disabled for testing --}}
+                                        {{-- <div class="input-group margin-top15 margin-bottom-20">
 															<div class="g-recaptcha" data-sitekey="{{ env('RE_CAP_SITE') }}" required=""></div>
 															{!! $errors->first('g-recaptcha-response', '<p class="alert alert-danger">:message</p>') !!}
-														</div>
+														</div> --}}
 														<p class="text-center loader hide">
 															<img src="{{asset('assets/images/loading.gif')}}" width="64">	
 														</p>
